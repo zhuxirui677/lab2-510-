@@ -1,0 +1,37 @@
+# Project: Tip Calculator
+# Framework: Streamlit (Python)
+# Python version: 3.11+
+
+## Coding Standards
+- Use Python 3.11+ features and syntax
+- Use type hints for all function parameters and return values
+- Add Google-style docstrings to all functions (Args, Returns, Raises sections)
+- Use descriptive variable names (avoid single-letter names except for loop counters)
+- Keep functions under 30 lines; extract helper functions when needed
+- Never hardcode sample data — always connect to real variables or session state
+
+## Streamlit Conventions
+- Use st.set_page_config() at the top of the main app file
+- Always validate user input before performing calculations
+- Use st.error() for error messages, st.warning() for soft warnings, st.info() for neutral messages
+- Use st.stop() after st.error() or st.warning() when the app cannot proceed
+- Use st.cache_data for any expensive computations or data loading
+- Never put primary results behind a button if they should be visible immediately
+
+## Project Structure
+- app.py: Main Streamlit application (UI only — no business logic)
+- utils.py: All utility and calculation functions
+- data/: Directory for any data files (CSV, JSON)
+
+## Visualization
+- Always use Plotly for charts, never Matplotlib
+- Color palette: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
+- Always include chart titles, X-axis labels, Y-axis labels, and hover tooltips
+- Format currency tooltips as "$X.XX"
+- Charts should be always visible when data exists — do not gate them behind buttons
+
+## What NOT to do
+- Do not import numpy or matplotlib — they are not in requirements.txt
+- Do not hardcode test values in production code
+- Do not use st.write() for user-facing messages — use st.metric(), st.error(), st.info() etc.
+- Do not put API keys or secrets in any file
