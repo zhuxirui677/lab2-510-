@@ -1,12 +1,12 @@
 # TECHIN 510 — Lab 2 Submission Report
 
-**Student Name:** [REPLACE WITH YOUR FULL NAME]  
-**Student ID:** [REPLACE WITH YOUR STUDENT NUMBER]  
+**Student Name:** Xirui Zhu  
+**Student ID:** 2530655
 **Course:** TECHIN 510 — University of Washington GIX  
 **Assignment:** Lab 2 — Anatomy of Coding Agents  
 **GitHub Repository:** https://github.com/GIX-Luyao/lab-2-zhuxirui677  
 
-> Replace the two bracketed fields above, then export this repository’s bundled report file `LAB2_FULL_REPORT.md` to PDF (see `reports/PDF_EXPORT_INSTRUCTIONS.md`).
+> Export `LAB2_FULL_REPORT.md` to PDF via `reports/PDF_EXPORT_INSTRUCTIONS.md`.
 
 ---
 
@@ -36,9 +36,9 @@ Capture these after running the commands in the Appendix, then either embed imag
 
 **Markdown embed (uncomment after saving PNGs):**
 
-<!-- ![Tip Calculator](docs/screenshots/tip_calculator_running.png) -->
-<!-- ![Eligibility — Cursor](docs/screenshots/eligibility_cursor_running.png) -->
-<!-- ![Eligibility — ChatGPT style](docs/screenshots/eligibility_chatgpt_running.png) -->
+![Tip Calculator](docs/screenshots/tip_calculator_running.png)
+![Eligibility — Cursor](docs/screenshots/eligibility_cursor_running.png)
+![Eligibility — ChatGPT style](docs/screenshots/eligibility_chatgpt_running.png)
 
 ---
 
