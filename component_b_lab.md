@@ -164,10 +164,10 @@ $ claude --version
 
 ### Step 1.4 — Launch Claude Code in Project
 
-Navigated to my Week 1 app folder and launched Claude Code:
+Navigated to this course project folder (local clone of the Lab 2 GitHub repository) and launched Claude Code:
 
 ```bash
-cd ~/Documents/techin510/my-first-app
+cd /path/to/lab-2-zhuxirui677
 source .venv/bin/activate
 claude
 ```
@@ -197,10 +197,10 @@ Typed `/exit` to end the session.
 
 ### Step 2.1 — Open Project in Cursor
 
-Opened the Week 1 Streamlit app in Cursor via **File > Open Folder**.
+Opened this repository in Cursor via **File > Open Folder**.
 
 ```bash
-cd ~/Documents/techin510/my-first-app
+cd /path/to/lab-2-zhuxirui677
 source .venv/bin/activate
 ```
 
@@ -246,8 +246,8 @@ No errors on first run.
 Selected the following block from `app.py`:
 
 ```python
-if "history" not in st.session_state:
-    st.session_state["history"] = []
+if "bill_amount" not in st.session_state:
+    st.session_state["bill_amount"] = 0.0
 ```
 
 Opened Cursor Chat (`Cmd+L`) and typed:
@@ -259,18 +259,18 @@ to code. What does each line do, and why is it written this way?
 
 **Claude's explanation (summarized):**
 
-> `st.session_state` is Streamlit's way of persisting data between reruns. Every time the user interacts with the app (e.g., moves a slider), Streamlit re-executes the entire script from top to bottom. Without session state, variables would reset on every interaction. This `if` check ensures the history list is only initialized once — the first time the app loads. After that, existing data is preserved.
+> `st.session_state` is Streamlit's way of persisting data between reruns. Every time the user interacts with the app (e.g., moves a slider), Streamlit re-executes the entire script from top to bottom. Without session state, variables would reset on every interaction. This `if` check ensures `bill_amount` is only initialized once — the first time the app loads. After that, existing data is preserved.
 
 **Follow-up I asked:**
 
 ```
 What would happen if I removed the if check and just wrote:
-st.session_state["history"] = []
+st.session_state["bill_amount"] = 0.0
 ```
 
 **Claude's answer:**
 
-> The history list would be wiped clean on every rerun. Any tip calculation the user added would disappear the moment they adjusted a slider or clicked a button. The `if` guard is what makes the state persistent.
+> The bill amount would reset to `0.0` on every rerun, so the receipt and chart would keep snapping back even if the user had entered a value. The `if` guard is what makes the state persistent.
 
 This clarified something I had been unsure about — why the pattern always uses `if "key" not in st.session_state`.
 
@@ -531,3 +531,70 @@ Claude Code answered accurately from `CLAUDE.md` without reading every source fi
 - [x] `CLAUDE.md` created and tested — Claude Code correctly described the project from context file
 - [x] Prompt log contains 3 prompts (vague → specific → constrained) with before/after results
 - [x] All changes committed and pushed to GitHub
+
+---
+
+## AI Usage Log — Prompt Log (Level 1: Descriptive)
+
+*Format: Prompt → Output → What it did*
+
+---
+
+### Log Entry 1 — Vague Prompt
+
+**Prompt:**
+```
+Add a chart to my app
+```
+
+**Output:**
+Cursor generated a Matplotlib bar chart with hardcoded sample data (`[10, 20, 30]`), imported `matplotlib.pyplot`, used `st.pyplot()`, placed at the bottom with no title or axis labels.
+
+**What it did:** Picked a random library (Matplotlib, not Plotly), invented its own sample data with no connection to the app, and added no interactivity. The output ran but was completely wrong for the use case.
+
+---
+
+### Log Entry 2 — Specific Prompt
+
+**Prompt:**
+```
+Add a bar chart below the receipt summary using Plotly. Show three bars:
+"Base Amount", "Tip Amount", and "Per-Person Share". Pull the values from
+the bill_amount, tip_amount, and per_person variables already calculated
+in the app. Include a title "Payment Breakdown", label both axes, and add
+hover tooltips showing exact dollar amounts.
+```
+
+**Output:**
+Cursor generated a Plotly `px.bar()` chart using the correct variables, with proper axis labels and hover data. It placed the chart inside an `if st.button("Show Chart"):` block — chart was hidden by default until the user clicked.
+
+**What it did:** Connected to real data and used the right library. Still made one assumption error: gating the chart behind a button, which was not specified or wanted.
+
+---
+
+### Log Entry 3 — Constrained Prompt
+
+**Prompt:**
+```
+Add a Plotly bar chart (not Matplotlib) directly below the receipt summary
+section — always visible, not inside a button. Show three bars: "Base Amount",
+"Tip Amount", and "Per-Person Share", using the variables bill_amount,
+tip_amount, and per_person that are already calculated. Use the color palette
+["#1f77b4", "#ff7f0e", "#2ca02c"]. Title: "Payment Breakdown". X-axis label:
+"Category". Y-axis label: "Amount (USD)". Add hover tooltips with exact values
+formatted as "$X.XX". If bill_amount is 0, display st.info("Enter a bill
+amount to see the chart.") instead of an empty chart. Follow .cursorrules.
+```
+
+**Output:**
+Chart matched the spec exactly — always visible, correct palette, `$X.XX` tooltip format, `st.info()` on zero bill. Function had type hints and a Google-style docstring (from `.cursorrules`).
+
+**What it did:** Eliminated all wrong assumptions. Behavioral constraints (`not inside a button`, `always visible`) were the most impactful. `.cursorrules` automatically applied style standards without restating them in the prompt.
+
+---
+
+### App Screenshot (Component B Deliverable)
+
+*Screenshot saved at `docs/screenshots/tip_calculator_running.png` — shows metrics, receipt, and Plotly chart with a sample bill.*
+
+![Tip Calculator running](docs/screenshots/tip_calculator_running.png)

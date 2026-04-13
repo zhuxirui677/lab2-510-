@@ -151,5 +151,5 @@ def highlight_eligibility(val: str) -> str:
     return "background-color: #f8d7da; color: #721c24"
 
 
-styled = df.style.applymap(highlight_eligibility, subset=["Eligible"])
+styled = df.style.map(highlight_eligibility, subset=["Eligible"])
 st.dataframe(styled, use_container_width=True, hide_index=True)

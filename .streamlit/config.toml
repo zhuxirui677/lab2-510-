@@ -1,0 +1,9 @@
+# Local dev: skip first-run email prompt; bind to localhost only.
+# See: https://docs.streamlit.io/develop/api-reference/configuration/config.toml
+
+[server]
+headless = true
+address = "127.0.0.1"
+
+[browser]
+gatherUsageStats = false

@@ -1,5 +1,9 @@
 # Week 2 Lab Manual: Anatomy of Coding Agents
 
+> **About this file:** This is the official **TECHIN 510** Week 2 instructor lab manual in **English**.  
+> **Bundling into your PDF:** By default, `./scripts/build_lab2_full_report.sh` **does not** append this file to `LAB2_FULL_REPORT.md`, so your submission stays focused on *your* work (Components A–E and reflection). To include the full manual for reference, run **`./scripts/build_lab2_full_report.sh --include-lab-manual`** and then export `LAB2_FULL_REPORT.md` to PDF.
+
+---
 
 ## Table of Contents
 
@@ -21,7 +25,7 @@
 
 This week focuses on understanding the anatomy of AI coding agents: how they work, how to talk to them effectively, and how to configure them for your project.
 
-You will set up Claude Code or equivalence, explore Cursor's three editing modes (Composer, Chat, and Inline Edit), practice iterative prompt engineering, and create configuration files that give AI tools persistent context about your project. The lab begins with a staff interview that connects conditional logic in real-world advising to the structured prompting you will practice throughout the session.
+You will set up **Claude Code** (or an equivalent terminal-based agent), explore Cursor's three editing modes (Composer, Chat, and Inline Edit), practice iterative prompt engineering, and create configuration files that give AI tools persistent context about your project. The lab begins with a staff interview that connects conditional logic in real-world advising to the structured prompting you will practice throughout the session.
 
 ---
 
@@ -88,7 +92,7 @@ Jason handles course petition syllabus reviews. This is a multi-step approval wo
 
 After the interview, write one sentence in this format:
 
-> "When **[people]** needs to **[task]**, they currently **[workaround]**, which causes **[pain]**."
+> "When **[person or role]** needs to **[task]**, they currently **[workaround]**, which causes **[pain]**."
 
 
 Based on interview, draw a flowchart for the workflow described by interviewee. Color code emotional journey on flowchart.
@@ -174,7 +178,7 @@ Claude Code runs in your terminal and connects to Anthropic's API. You need an A
 
 #### Step 1.3: Install Claude Code
 
-Follow Claude Code doc and install it.
+Follow the official **Claude Code** documentation and install it.
 
 This should install Claude Code globally on your machine. 
 
@@ -189,10 +193,10 @@ Expected: a version number.
 
 #### Step 1.4: Launch Claude Code in Your Project
 
-Navigate to your Week 1 app folder (or any project folder) in the terminal. For example (the command varies depending on where the project lives in your device):
+Navigate to your Week 1 app folder (or any project folder) in the terminal. Replace the path with wherever your repository lives on your computer:
 
 ```bash
-cd ~/Documents/techin510/my-first-app
+cd /path/to/your-streamlit-project
 ```
 
 Then start Claude Code:
@@ -234,7 +238,7 @@ In this level, you will use three different Cursor modes to add a feature, under
 Open your Week 1 Streamlit app in Cursor (File > Open Folder). Make sure your virtual environment is activated first:
 
 ```bash
-cd ~/Documents/techin510/my-first-app
+cd /path/to/your-streamlit-project
 source .venv/bin/activate    # macOS / Linux
 # .venv\Scripts\activate.bat  # Windows
 ```
@@ -380,7 +384,7 @@ Before writing any prompt, practice the **spec-first habit**. For each prompt at
 2. **What inputs does it take?** (data, user actions, parameters)
 3. **What should the output look like?** (visual layout, format, interaction)
 
-Write your spec in a comment at the top of your file or in a separate note. Then use your spec to write the prompt. After each attempt, compare the result to your spec (not just to the visual target. Did the AI deliver what you specified?)
+Write your spec in a comment at the top of your file or in a separate note. Then use your spec to write the prompt. After each attempt, compare the result to your spec (not just to the visual target). Did the AI deliver what you specified?
 
 > A clear spec produces better AI output than ad-hoc prompting.
 
@@ -461,9 +465,9 @@ Look at your three attempts and note:
 
 Configuration files are how you give AI tools persistent context about your project. Think of them as the "brief" you hand to a new collaborator on their first day. Without them, AI tools start every conversation from scratch. With them, they understand your project's standards, preferences, and structure from the start.
 
-#### Step 4.1: Create a Cursor Rules
+#### Step 4.1: Create Cursor Rules (`.cursorrules`)
 
-In Cursor, create Cursor rules. Add the following content, customizing it for your project:
+In Cursor, create a **Cursor rules** file (typically named `.cursorrules` in the project root). Add the following content, customizing it for your project:
 
 ```
 # Project: [Your App Name]
@@ -559,7 +563,7 @@ Check: Does the generated code follow your rules? Does it have type hints, a doc
 **Test `CLAUDE.md`:** Open Claude Code in your terminal:
 
 ```bash
-cd ~/Documents/techin510/my-first-app
+cd /path/to/your-streamlit-project
 claude
 ```
 

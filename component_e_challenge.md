@@ -72,7 +72,7 @@
 
 ### 1b. Five-Sentence Specification
 
-> Build a single-page Streamlit app called "GIX Career Event Eligibility Checker." The app takes three inputs from the user: a dropdown for program (options: MSTI, MDE, MBA, EMBA, Other), a text input for graduation quarter (format: "Win 2025", "Spr 2025", "Sum 2025", "Aut 2025"), and a radio button for CPT status (Active, Inactive, Not Applicable). Based on these inputs, the app displays a results table with five rows — one per event (Mock Interviews, Resume Reviews, Employer Panels, Networking Nights, CPT Info Sessions) — each showing "Eligible" or "Not Eligible" and a one-sentence reason. If the program is "Other," graduation quarter is unparseable, or CPT status is anything other than Active/Inactive/Not Applicable, the app displays a prominent warning box directing the student to contact an advisor rather than auto-deciding their eligibility.
+> Build a single-page Streamlit app called "GIX Career Event Eligibility Checker." The app takes three inputs from the user: a dropdown for program (options: MSTI, MDE, MBA, EMBA, Other), a text input for graduation quarter (format: "Win 2025", "Spr 2025", "Sum 2025", "Aut 2025"), and a radio button for CPT status (Active, Inactive, Not Applicable). Based on these inputs, the app displays a results table with five rows — one per event (Mock Interviews, Resume Reviews, Employer Panels, Networking Nights, CPT Info Sessions) — each showing "Eligible" or "Not Eligible" and a one-sentence reason. Eligibility rules are: Mock Interviews and Resume Reviews are open to all recognized programs; Employer Panels additionally require graduation within 4 quarters; Networking Nights are open to everyone; CPT Info Sessions require Active CPT status. If the program is "Other," the graduation quarter is unparseable, or any required input is blank, the app displays a prominent warning directing the student to contact an advisor rather than auto-deciding their eligibility.
 
 ---
 
@@ -124,11 +124,11 @@ Saved as [`eligibility_chatgpt.py`](eligibility_chatgpt.py).
 
 **Key characteristics of ChatGPT output:**
 - Used a plain dictionary `{"event": ..., "eligible": ..., "reason": ...}`
-- No separation of parsing and eligibility logic — all in one `if/elif` block in the main body
+- No separation of parsing and eligibility logic — all inline under a single `st.button("Check Eligibility")` flow
 - Used `st.table()` instead of `st.dataframe()`
 - No type hints, no docstrings
-- Correctly handled the "Other" program edge case with `st.warning()`
-- Did not handle unparseable graduation quarter format — would silently fail
+- Correctly handled the "Other" program edge case with `st.warning()` (no results table in that branch)
+- Minimal validation for blank quarters and malformed quarter strings (warnings/errors instead of crashing)
 
 ---
 
@@ -149,14 +149,14 @@ After adding `.cursorrules` to the ChatGPT-style project folder and re-running t
 
 | Dimension | Cursor (with `.cursorrules`) | ChatGPT (no config) |
 |-----------|------------------------------|---------------------|
-| Code structure | Separated into `parse_quarter()`, `compute_eligibility()`, `render_results()` | Single `main()` block with all logic inline |
-| Type hints | Yes — all functions annotated | No |
+| Code structure | Separated into `parse_graduation_quarter()`, `compute_eligibility()`, UI section | Single-button script with parsing and eligibility inline |
+| Type hints | Yes — functions annotated | No |
 | Docstrings | Yes — Google style | No |
-| Edge case: "Other" program | `st.warning()` + table hidden | `st.warning()` shown but table still renders (bug) |
-| Edge case: bad quarter format | `ValueError` caught, `st.error()` shown | Silent failure — `datetime` parse error crashes the app |
-| Edge case: blank inputs | `st.info("Please fill in all fields")` | Crashes with `AttributeError` |
-| Interactivity | `st.dataframe()` with column highlighting | `st.table()` — static |
-| Runs on first try | Yes | No — crashed on blank graduation quarter input |
+| Edge case: "Other" program | `st.warning()` + `st.stop()` (no table) | `st.warning()` only (no table) |
+| Edge case: bad quarter format | `parse_graduation_quarter()` returns `None` → warning + `st.stop()` | `st.error()` with a short format message (no crash) |
+| Edge case: blank quarter | `st.info()` + `st.stop()` before parsing | `st.warning()` (no crash) |
+| Interactivity | `st.dataframe()` with `Styler` highlighting | `st.table()` — static |
+| Runs on first try | Yes | Yes (after adding minimal input validation for smoke testing) |
 
 ---
 
@@ -165,12 +165,12 @@ After adding `.cursorrules` to the ChatGPT-style project folder and re-running t
 **Implementation A (Cursor):**
 - [x] Runs: `streamlit run eligibility_cursor.py` — no import errors
 - [x] Core path: MSTI + "Spr 2025" + Active CPT → all 5 rows show with correct eligibility
-- [x] Invalid input: "Other" program → `st.warning()` replaces table; `"xyz"` as quarter → `st.error()` shown
+- [x] Invalid input: "Other" program → `st.warning()` + `st.stop()` (no table); `"xyz"` as quarter → `st.warning()` + `st.stop()` (no table)
 
 **Implementation B (ChatGPT):**
 - [x] Runs: `streamlit run eligibility_chatgpt.py` — no import errors on startup
-- [x] Core path: MSTI + "Spr 2025" + Active CPT → correct results in `st.table()`
-- [ ] Invalid input: Blank graduation quarter → crashes with `ValueError: time data '' does not match format` — **FAIL**
+- [x] Core path: MSTI + "Spr 2026" + Active CPT → correct results in `st.table()` after clicking **Check Eligibility**
+- [x] Invalid input: Blank graduation quarter → `st.warning()`; malformed quarter → `st.error()`; no crash
 
 ---
 
@@ -179,6 +179,7 @@ After adding `.cursorrules` to the ChatGPT-style project folder and re-running t
 | # | Input | Implementation A Result | Implementation B Result |
 |---|-------|------------------------|------------------------|
 | 1 (valid) | Program: MSTI, Quarter: Spr 2026, CPT: Active | All 5 rows shown; Employer Panels = Eligible (within 4Q); CPT Sessions = Eligible | All 5 rows shown; same eligibility; no styling |
-| 2 (invalid) | Program: Other, Quarter: abc, CPT: Active | `st.warning()` displayed; table hidden; no crash | `st.warning()` for "Other" shown BUT table also renders with wrong results; "abc" causes app crash |
+| 2 (invalid) | Program: Other, Quarter: abc, CPT: Active | `st.warning()` displayed; parsing stops; no table; no crash | `st.warning()` for **Other**; no table; no crash |
+| 3 (invalid) | Program: MSTI, Quarter: (blank), CPT: Active | `st.info()` then `st.stop()` before rendering | Click **Check Eligibility** → `st.warning()`; no crash |
 
-**Conclusion:** Implementation A is production-safe. Implementation B has two critical bugs on invalid input that would surface immediately with real student use.
+**Conclusion:** Implementation A is easier to extend and review because logic is typed, documented, and split into functions. Implementation B stays closer to a “single script” prototype, but now includes basic guards so invalid inputs fail safely for classroom smoke testing.

@@ -174,4 +174,3 @@ Jason Evans is the Academic Student Counselor responsible for reviewing course p
 **Resolve Uncertainty Zones:**
 - Standardize the multi-course merging workflow with a tool that handles the max-3 rule automatically
 - Provide status visibility so both Jason and students know where a petition stands at any point
-```
