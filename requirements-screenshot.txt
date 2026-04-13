@@ -1,2 +1,0 @@
-# Optional: automated Playwright capture for docs/screenshots/
-playwright>=1.42.0
